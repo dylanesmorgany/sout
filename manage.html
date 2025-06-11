@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sout Management</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+    body { padding: 2rem; }
+    table { width: 100%; border-collapse: collapse; margin-top: 2rem; }
+    th, td { border-bottom: 1px solid rgba(255,255,255,0.2); padding: 0.5rem; }
+    th { text-align: left; }
+    </style>
+</head>
+<body>
+    <h1>Management</h1>
+    <p>Recent Requests</p>
+    <table id="log-table">
+        <thead>
+            <tr><th>User</th><th>Query</th><th>File</th></tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <script>
+    async function loadLogs() {
+        const res = await fetch('/logs');
+        if (!res.ok) return;
+        const data = await res.json();
+        const tbody = document.querySelector('#log-table tbody');
+        tbody.innerHTML = '';
+        data.slice(-20).reverse().forEach(item => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td>${item.user}</td><td>${item.query}</td><td>${item.file ? item.file : ''}</td>`;
+            tbody.appendChild(tr);
+        });
+    }
+    loadLogs();
+    </script>
+</body>
+</html>
